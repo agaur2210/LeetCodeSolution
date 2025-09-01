@@ -1,0 +1,11 @@
+WITH RankedSalaries AS (
+    SELECT DISTINCT Salary,
+           DENSE_RANK() OVER (ORDER BY Salary DESC) as salary_rank
+    FROM Employee
+)
+SELECT 
+    CASE 
+        WHEN EXISTS (SELECT 1 FROM RankedSalaries WHERE salary_rank = 2)
+        THEN (SELECT Salary FROM RankedSalaries WHERE salary_rank = 2)
+        ELSE NULL 
+    END AS SecondHighestSalary;
